@@ -126,6 +126,40 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Entities.Entities.CompraUsuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CUS_ID")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdProduto")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QtdCompra")
+                        .HasColumnName("CUS_QTD")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Situacao")
+                        .HasColumnName("CUS_ESTADO")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TB_COMPRA_USUARIO");
+                });
+
             modelBuilder.Entity("Entities.Entities.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -133,6 +167,19 @@ namespace Infrastructure.Migrations
                         .HasColumnName("PRD_ID")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DataAlteracao")
+                        .HasColumnName("PRD_DATA_ALTERACAO")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnName("PRD_DATA_CADASTRO")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnName("PRD_DESCRICAO")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<bool>("Estado")
                         .HasColumnName("PRD_ESTADO")
@@ -142,11 +189,25 @@ namespace Infrastructure.Migrations
                         .HasColumnName("PRD_NOME")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Observacao")
+                        .HasColumnName("PRD_OBSERVACAO")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(20000);
+
+                    b.Property<int>("QtdEstoque")
+                        .HasColumnName("PRD_QTD_ESTOQUE")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("Valor")
                         .HasColumnName("PRD_VALOR")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Produto");
                 });
@@ -284,6 +345,24 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Entities.Entities.CompraUsuario", b =>
+                {
+                    b.HasOne("Entities.Entities.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId");
+
+                    b.HasOne("Entities.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Entities.Entities.Produto", b =>
+                {
+                    b.HasOne("Entities.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,10 +1,7 @@
 ﻿using Entities.Entities.Enums;
 using Entities.Notifications;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Entities.Entities
 {
@@ -32,7 +29,7 @@ namespace Entities.Entities
         [Display(Name = "Usuário")]
         [ForeignKey("ApplicationUser")]
         [Column(Order = 1)]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }
