@@ -1,4 +1,12 @@
+using ApplicationApp.Interfaces;
+using ApplicationApp.OpenApp;
+using Domain.Interfaces.Generics;
+using Domain.Interfaces.InterfaceProduct;
+using Domain.Interfaces.InterfaceServices;
+using Domain.Services;
 using Infrastructure.Configuration;
+using Infrastructure.Repository.Generics;
+using Infrastructure.Repository.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +36,16 @@ namespace Kwanza.Shop.Web
                 .AddEntityFrameworkStores<ApplicationContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            // INTERFACE E REPOSITORIO
+            services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
+            services.AddSingleton<IProduto, RepositoryProduto>();
+
+            //INTERFACE APLICAÇÃO
+            services.AddSingleton<InterfaceProdutoApp, AppProduto>();
+
+            //SERVIÇO DOMINIO
+            services.AddSingleton<IServiceProduto, ServiceProduto>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
