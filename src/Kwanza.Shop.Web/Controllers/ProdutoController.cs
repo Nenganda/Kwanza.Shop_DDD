@@ -137,5 +137,20 @@ namespace Kwanza.Shop.Web.Controllers
 
             return idUsuario.Id;
         }
+
+        //Listar Todos os produtos por vender na Pagina
+        [AllowAnonymous] //Permitir acesso sem Autenticação do Usuário
+        [HttpGet("/api/ListarProdutosComEstoque")]
+        public async Task<JsonResult> ListarProdutosComEstoque()
+        {
+            return Json(await _interfaceProdutoApp.ListarProdutosComEstoque());
+        }
+        
+        [HttpPost("/api/AdicionarProdutoCarrinho")]
+        public async Task AdicionarProdutoCarrinho(string id, string nome, string qtd)
+        {
+            //
+        }
+
     }
 }

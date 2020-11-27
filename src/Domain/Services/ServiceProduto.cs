@@ -2,6 +2,7 @@
 using Domain.Interfaces.InterfaceServices;
 using Entities.Entities;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Domain.Services
@@ -30,6 +31,12 @@ namespace Domain.Services
                 produto.Estado = true;
                 await _produto.Add(produto);
             }
+        }
+
+        //Listar Todos os produtos por vender na Pagina
+        public async Task<List<Produto>> ListarProdutosComEstoque()
+        {
+            return await _produto.ListarProdutos(p => p.QtdEstoque > 0);
         }
 
         public async Task UpdateProduct(Produto produto)

@@ -50,6 +50,12 @@ namespace ApplicationApp.OpenApp
             return await _produto.List();
         }
 
+        //Listar Todos os produtos por vender na Pagina
+        public async Task<List<Produto>> ListarProdutosComEstoque()
+        {
+            return await _serviceProduto.ListarProdutosComEstoque();
+        }
+
         public async Task<List<Produto>> ListarProdutosUsuario(string userId)
         {
             return await _produto.ListarProdutosUSuario(userId);
