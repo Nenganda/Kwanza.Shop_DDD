@@ -50,6 +50,11 @@ namespace ApplicationApp.OpenApp
             return await _produto.List();
         }
 
+        public async Task<List<Produto>> ListarProdutosUsuario(string userId)
+        {
+            return await _produto.ListarProdutosUSuario(userId);
+        }
+
         public async Task Update(Produto Objeto)
         {
             await _produto.Update(Objeto);

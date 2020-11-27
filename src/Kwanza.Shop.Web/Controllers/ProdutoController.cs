@@ -1,6 +1,7 @@
 ﻿using ApplicationApp.Interfaces;
 using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,15 +13,21 @@ namespace Kwanza.Shop.Web.Controllers
     {
         private readonly InterfaceProdutoApp _interfaceProdutoApp;
 
-        public ProdutoController(InterfaceProdutoApp interfaceProdutoApp)
+        //Pegar Usuário Logado
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ProdutoController(InterfaceProdutoApp interfaceProdutoApp, UserManager<ApplicationUser> userManager)
         {
             _interfaceProdutoApp = interfaceProdutoApp;
+            _userManager = userManager;
         }
 
         // GET: ProdutoController
         public async Task<IActionResult> Index()
         {
-            return View(await _interfaceProdutoApp.List());
+            var idUsuario = await RetornarIdUsuarioLogado();
+
+            return View(await _interfaceProdutoApp.ListarProdutosUsuario(idUsuario));
         }
 
         // GET: ProdutoController/Details/5
@@ -42,6 +49,11 @@ namespace Kwanza.Shop.Web.Controllers
         {
             try
             {
+
+                //Setar o Usuário Logado ao objecto
+                var idUsuario = await RetornarIdUsuarioLogado();
+                produto.UserId = idUsuario;
+
                 await _interfaceProdutoApp.AddProduct(produto);
                 if (produto.Notificacoes.Any())
                 {
@@ -50,12 +62,12 @@ namespace Kwanza.Shop.Web.Controllers
                         ModelState.AddModelError(item.NomePropriedade, item.Mensagem);
                     }
 
-                    return View("Edit", produto);
+                    return View("Create", produto);
                 }
             }
             catch
             {
-                return View("Edit", produto);
+                return View("Create", produto);
             }
 
             return RedirectToAction(nameof(Index));
@@ -116,6 +128,14 @@ namespace Kwanza.Shop.Web.Controllers
             {
                 return View();
             }
+        }
+
+        //Metodo q pegar Usuário Logado
+        private async Task<string> RetornarIdUsuarioLogado()
+        {
+            var idUsuario = await _userManager.GetUserAsync(User);
+
+            return idUsuario.Id;
         }
     }
 }

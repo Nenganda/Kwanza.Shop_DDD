@@ -1,11 +1,10 @@
 ﻿using Entities.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Configuration
 {
-    public class ApplicationContext : IdentityDbContext<IdentityUser>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) :  base(options)
         {
@@ -14,7 +13,7 @@ namespace Infrastructure.Configuration
 
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<CompraUsuario> ComprasUsuarios { get; set; }
-        public DbSet<IdentityUser> IdentityUser { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,7 +27,7 @@ namespace Infrastructure.Configuration
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //Informar a que o campo (Id) perteente a tabela AspNetUsers é a chave Primaria
-            builder.Entity<IdentityUser>().ToTable("AspNetUsers").HasKey(us => us.Id); 
+            builder.Entity<ApplicationUser>().ToTable("AspNetUsers").HasKey(us => us.Id); 
 
             base.OnModelCreating(builder);  
         }
