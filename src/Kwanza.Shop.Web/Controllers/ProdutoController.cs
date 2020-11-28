@@ -94,6 +94,10 @@ namespace Kwanza.Shop.Web.Controllers
                         ModelState.AddModelError(item.NomePropriedade, item.Mensagem);
                     }
 
+                    //Mostrar alerta quando ocorrer um Erro
+                    ViewBag.Alerta = true;
+                    ViewBag.Mensagem = "Verifique, ocorreu algum erro!";
+
                     return View("Edit", produto);
                 }
             }
@@ -145,12 +149,5 @@ namespace Kwanza.Shop.Web.Controllers
         {
             return Json(await _interfaceProdutoApp.ListarProdutosComEstoque());
         }
-        
-        [HttpPost("/api/AdicionarProdutoCarrinho")]
-        public async Task AdicionarProdutoCarrinho(string id, string nome, string qtd)
-        {
-            //
-        }
-
     }
 }

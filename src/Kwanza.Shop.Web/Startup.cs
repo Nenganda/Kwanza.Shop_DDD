@@ -1,6 +1,7 @@
 using ApplicationApp.Interfaces;
 using ApplicationApp.OpenApp;
 using Domain.Interfaces.Generics;
+using Domain.Interfaces.InterfaceCompraUsuario;
 using Domain.Interfaces.InterfaceProduct;
 using Domain.Interfaces.InterfaceServices;
 using Domain.Services;
@@ -40,9 +41,11 @@ namespace Kwanza.Shop.Web
             // INTERFACE E REPOSITORIO
             services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
             services.AddSingleton<IProduto, RepositoryProduto>();
+            services.AddSingleton<ICompraUsuario, RepositoryCompraUsuario>();
 
             //INTERFACE APLICAÇÃO
             services.AddSingleton<InterfaceProdutoApp, AppProduto>();
+            services.AddSingleton<InterfaceCompraUsuarioApp, AppCompraUsuario>();
 
             //SERVIÇO DOMINIO
             services.AddSingleton<IServiceProduto, ServiceProduto>();
