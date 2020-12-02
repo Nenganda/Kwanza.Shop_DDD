@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Services
 {
+    //É usado esta classe quando aquisição do select terá Regras
     public class ServiceProduto : IServiceProduto
     {
         private readonly IProduto _produto;

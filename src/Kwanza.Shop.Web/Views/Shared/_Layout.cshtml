@@ -28,7 +28,9 @@
                         </li>
                         @*Mostrar quantidade de produto*@
                         <li class="nav-item">
-                            <a class="nav-link text-dark">Meus carrinho <span id="qtdCarrinho"></span></a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Produto" asp-action="ListarProdutosCarrinhoUsuario">
+                                <img src="~/img/carrinho.png" width="20" height="20" /> <span id="qtdCarrinho" class="qtdCarrinho"></span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -49,6 +51,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jsProdutosVenda.js"></script>
 
     @*Fechar o pop-up de alerta*@
     <script>

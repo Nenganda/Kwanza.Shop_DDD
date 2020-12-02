@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.InterfaceServices
 {
+    //É usado esta classe quando aquisição do select terá Regras
     public interface IServiceProduto
     {
         Task AddProduct(Produto produto);

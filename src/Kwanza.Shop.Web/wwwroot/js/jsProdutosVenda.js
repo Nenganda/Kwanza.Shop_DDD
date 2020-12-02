@@ -62,7 +62,22 @@ ObjetoVenda.CarregaProdutos = function () {
 }
 
 ObjetoVenda.CarregaQtdCarrinho = function () {
-    $("#qtdCarrinho").text("0");
+
+    $("#qtdCarrinho").text("(0)");
+
+    $.ajax({
+        type: 'GET',
+        url: "/api/QtdProdutosCarrinho",
+        dataType: "JSON",
+        cache: false,
+        async: true,
+        success: function (data) {
+
+            if (data.sucesso) {
+                $("#qtdCarrinho").text("(" + data.qtd + ")");
+            }
+        }
+    });  
 
     //Cada 10s actualizar
     setTimeout(ObjetoVenda.CarregaQtdCarrinho, 10000);
@@ -70,4 +85,5 @@ ObjetoVenda.CarregaQtdCarrinho = function () {
 
 $(function () {
     ObjetoVenda.CarregaProdutos();
+    ObjetoVenda.CarregaQtdCarrinho();
 });

@@ -15,11 +15,15 @@ namespace Kwanza.Shop.Web.Controllers
 
         //Pegar Usuário Logado
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly InterfaceCompraUsuarioApp _interfaceCompraUsuarioApp;
 
-        public ProdutoController(InterfaceProdutoApp interfaceProdutoApp, UserManager<ApplicationUser> userManager)
+        public ProdutoController(InterfaceProdutoApp interfaceProdutoApp, 
+            UserManager<ApplicationUser> userManager,
+            InterfaceCompraUsuarioApp interfaceCompraUsuarioApp)
         {
             _interfaceProdutoApp = interfaceProdutoApp;
             _userManager = userManager;
+            _interfaceCompraUsuarioApp = interfaceCompraUsuarioApp;
         }
 
         // GET: ProdutoController
@@ -148,6 +152,37 @@ namespace Kwanza.Shop.Web.Controllers
         public async Task<JsonResult> ListarProdutosComEstoque()
         {
             return Json(await _interfaceProdutoApp.ListarProdutosComEstoque());
+        }
+
+        public async Task<IActionResult> ListarProdutosCarrinhoUsuario()
+        {
+            var idUsuario = await RetornarIdUsuarioLogado();
+            return View(await _interfaceProdutoApp.ListarProdutosCarrinhoUsuario(idUsuario));
+        }
+
+        // GET: ProdutoController/Delete/5
+        public async Task<IActionResult> RemoverCarrinho(int id)
+        {
+            return View(await _interfaceProdutoApp.ObterProdutoCarrinho(id));
+        }
+
+        // POST: ProdutoController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoverCarrinho(int id, Produto produto)
+        {
+            try
+            {
+                var produtoDeletar = await _interfaceCompraUsuarioApp.GetEntityById(id);
+
+                await _interfaceCompraUsuarioApp.Delete(produtoDeletar);
+
+                return RedirectToAction(nameof(ListarProdutosCarrinhoUsuario));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
