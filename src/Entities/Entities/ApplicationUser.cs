@@ -21,6 +21,11 @@ namespace Entities.Entities
         [Display(Name = "Nome")]
         public string Nome { get; set; }
 
+        [Column("USR_CEP")]
+        [MaxLength(15)]
+        [Display(Name = "CEP")]
+        public string CEP { get; set; }
+
         [Column("USR_ENDERECO")]
         [MaxLength(255)]
         [Display(Name = "Endereço")]
