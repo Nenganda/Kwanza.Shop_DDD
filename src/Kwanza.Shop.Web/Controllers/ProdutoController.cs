@@ -1,9 +1,14 @@
 ﻿using ApplicationApp.Interfaces;
 using Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.Permissions;
 using System.Threading.Tasks;
 
 namespace Kwanza.Shop.Web.Controllers
@@ -16,14 +21,17 @@ namespace Kwanza.Shop.Web.Controllers
         //Pegar Usuário Logado
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly InterfaceCompraUsuarioApp _interfaceCompraUsuarioApp;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ProdutoController(InterfaceProdutoApp interfaceProdutoApp, 
             UserManager<ApplicationUser> userManager,
-            InterfaceCompraUsuarioApp interfaceCompraUsuarioApp)
+            InterfaceCompraUsuarioApp interfaceCompraUsuarioApp,
+            IWebHostEnvironment webHostEnvironment)
         {
             _interfaceProdutoApp = interfaceProdutoApp;
             _userManager = userManager;
             _interfaceCompraUsuarioApp = interfaceCompraUsuarioApp;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: ProdutoController
@@ -68,6 +76,8 @@ namespace Kwanza.Shop.Web.Controllers
 
                     return View("Create", produto);
                 }
+                
+                await SalvarImagemProduto(produto);
             }
             catch
             {
@@ -184,5 +194,39 @@ namespace Kwanza.Shop.Web.Controllers
                 return View();
             }
         }
+
+        #region
+        public async Task SalvarImagemProduto(Produto produtoTela)
+        {
+            try
+            {
+                var produto = await _interfaceProdutoApp.GetEntityById(produtoTela.Id);
+
+                if (produtoTela.Imagem != null)
+                {
+                    var webRoot = _webHostEnvironment.WebRootPath;
+                    var permissionSet = new PermissionSet(PermissionState.Unrestricted);
+                    var writePermission = new FileIOPermission(FileIOPermissionAccess.Append, string.Concat(webRoot, "/img/produtos"));
+                    permissionSet.AddPermission(writePermission);
+
+                    var Extension = System.IO.Path.GetExtension(produtoTela.Imagem.FileName);
+
+                    var NomeArquivo = string.Concat(produto.Id.ToString(), Extension);
+
+                    var diretorioArquivoSalvar = string.Concat(webRoot, "\\img\\produtos\\", NomeArquivo);
+
+                    produtoTela.Imagem.CopyTo(new FileStream(diretorioArquivoSalvar, FileMode.Create));
+
+                    produto.Url = string.Concat("https://localhost:44316", "/img/produtos/", NomeArquivo);
+
+                    await _interfaceProdutoApp.UpdateProduct(produto);
+                }
+
+            }
+            catch (Exception erro)
+            {
+            }
+        }
+        #endregion
     }
 }
