@@ -1,22 +1,29 @@
 ﻿using ApplicationApp.Interfaces;
 using Entities.Entities;
 using Entities.Entities.Enums;
+using Kwanza.Shop.Web.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Web_ECommerce.Models;
 
 namespace Kwanza.Shop.Web.Controllers
 {
-    public class CompraUsuarioController : Controller
+    public class CompraUsuarioController : HelpQrCode
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly InterfaceCompraUsuarioApp _interfaceCompraUsuarioApp;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public CompraUsuarioController(UserManager<ApplicationUser> userManager, InterfaceCompraUsuarioApp interfaceCompraUsuarioApp)
+        public CompraUsuarioController(UserManager<ApplicationUser> userManager, 
+            InterfaceCompraUsuarioApp interfaceCompraUsuarioApp,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _interfaceCompraUsuarioApp = interfaceCompraUsuarioApp;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -91,5 +98,15 @@ namespace Kwanza.Shop.Web.Controllers
             }
             else return RedirectToAction("FinalizarCompra");
         }
+
+        public async Task<IActionResult> Imprimir()
+        {
+
+            var usuario = await _userManager.GetUserAsync(User);
+            var compraUsuario = await _interfaceCompraUsuarioApp.ProdutosComprados(usuario.Id);
+
+            return await Download(compraUsuario, _webHostEnvironment);
+        }
+
     }
 }
