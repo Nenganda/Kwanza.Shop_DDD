@@ -49,6 +49,7 @@ namespace Kwanza.Shop.Web
 
             //SERVIÇO DOMINIO
             services.AddSingleton<IServiceProduto, ServiceProduto>();
+            services.AddSingleton<IServiceCompraUsuario, ServiceCompraUsuario>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
